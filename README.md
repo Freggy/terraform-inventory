@@ -17,6 +17,7 @@ The following providers are supported:
 * Exoscale
 * Google Compute Engine
 * [libvirt](https://github.com/dmacvicar/terraform-provider-libvirt)
+* Linode
 * OpenStack
 * Packet
 * ProfitBricks
@@ -24,6 +25,7 @@ The following providers are supported:
 * SoftLayer
 * VMware
 * Nutanix
+* Open Telekom Cloud
 
 It's very simple to add support for new providers. See pull requests with the
 [provider][pv] label for examples.

@@ -45,7 +45,7 @@ const expectedListOutputEnvHostname = `
 		}
 	},
 	"fourteen":	 ["fourteen"],
-	"fourteen.0":	 ["fourteen"],
+	"fourteen_0":	 ["fourteen"],
 	"type_libvirt_domain": ["fourteen"]
 }`
 
@@ -224,12 +224,18 @@ const exampleStateFile = `
 						"y"
 					],
 					"primary": {
-						"id": "123456789",
+						"id": "5730e2c9-765f-46e1-aa77-81c94f56ce5d",
 						"attributes": {
 							"diskSize": "10",
-							"id": "123456789",
+							"id": "5730e2c9-765f-46e1-aa77-81c94f56ce5d",
 							"keypair": "kp",
 							"name": "xyz",
+							"gateway": "10.0.0.1",
+							"ip4": "true",
+							"ip6": "false",
+							"ip6_address": "",
+							"ip6_cidr": "",
+							"ip_address": "10.0.0.9",
 							"networks.#": "1",
 							"networks.0.%": "5",
 							"networks.0.default": "true",
@@ -241,6 +247,8 @@ const exampleStateFile = `
 							"securitygroups.0": "xyz",
 							"size": "zzz",
 							"state": "Running",
+							"tags.%": "1",
+							"tags.Role": "nine",
 							"template": "Linux CoreOS stable 1298 64-bit",
 							"userdata": "",
 							"zone": "ch-gva-2"
@@ -387,6 +395,19 @@ const exampleStateFile = `
 						}
 					}
 				},
+				"opentelekomcloud_compute_instance_v2.nineteen": {
+					"type": "opentelekomcloud_compute_instance_v2",
+					"primary": {
+						"id": "00000000-0000-0000-0000-000000000015",
+						"attributes": {
+							"id": "00000000-0000-0000-0000-000000000015",
+							"access_ip_v4": "10.0.0.19",
+							"access_ip_v6": "",
+							"tag.%": "1",
+							"tag.tfinventory": "rocks"
+						}
+					}
+				},
 				"profitbricks_server.sixteen": {
 					"type": "profitbricks_server",
 					"primary": {
@@ -407,6 +428,47 @@ const exampleStateFile = `
 							"tags.Role": "worker"
 						}
 					}
+				},
+				"linode_instance.eighteen": {
+					"type": "linode_instance",
+					"depends_on": [],
+					"primary": {
+						"id": "123456789",
+						"attributes": {
+							"ip_address": "80.80.100.124",
+							"private_ip": "true",
+							"private_ip_address": "192.168.167.23",
+							"tags.#": "0"
+						}
+					}
+                },
+				"hcloud_server.twenty": {
+					"type": "hcloud_server",
+					"depends_on": [],
+					"primary": {
+						"id": "42",
+						"attributes": {
+							"backup_window": "",
+							"backups": "false",
+							"datacenter": "fsn1-dc14",
+							"id": "42",
+							"image": "1",
+							"ipv4_address": "10.0.0.20",
+							"keep_disk": "false",
+							"labels.%": "1",
+							"labels.testlabel": "hcloud_test",
+							"location": "fsn1",
+							"name": "twenty",
+							"server_type": "cx11",
+							"ssh_keys.#": "1",
+							"ssh_keys.0": "1337",
+							"status": "running"
+						},
+						"meta": {},
+						"tainted": false
+					},
+					"deposed": [],
+					"provider": "provider.hcloud"
 				}
 			}
 		}
@@ -423,6 +485,8 @@ const expectedListOutput = `
 			"10.0.0.11",
 			"10.0.0.13",
 			"10.0.0.16",
+			"10.0.0.19",
+			"10.0.0.20",
 			"10.0.0.7",
 			"10.0.0.8",
 			"10.0.0.9",
@@ -434,6 +498,7 @@ const expectedListOutput = `
 			"192.168.102.14",
 			"50.0.0.1",
 			"50.0.0.17",
+			"80.80.100.124",
 			"10.20.30.50"
 		],
 		"vars": {
@@ -459,34 +524,42 @@ const expectedListOutput = `
 	"testTag1": ["10.20.30.50"],
 	"thirteen": ["10.0.0.13"],
 	"fourteen": ["192.168.102.14"],
+	"nineteen": ["10.0.0.19"],
 	"sixteen": ["10.0.0.16"],
 	"seventeen": ["50.0.0.17"],
+	"eighteen": ["80.80.100.124"],
+	"twenty": ["10.0.0.20"],
 
-	"one.0":   ["10.0.0.1"],
-	"dup.0":   ["10.0.0.1"],
-	"one.1":   ["10.0.1.1"],
-	"two.0":   ["50.0.0.1"],
-	"three.0": ["192.168.0.3"],
-	"four.0":  ["10.2.1.5"],
-	"five.0":  ["10.20.30.40"],
-	"six.0":   ["10.120.0.226"],
-	"seven.0": ["10.0.0.7"],
-	"eight.0": ["10.0.0.8"],
-	"nine.0":  ["10.0.0.9"],
-	"ten.0":   ["10.0.0.10"],
-	"eleven.0": ["10.0.0.11"],
-	"twelve.0": ["10.20.30.50"],
-	"thirteen.0": ["10.0.0.13"],
-	"fourteen.0": ["192.168.102.14"],
-	"sixteen.0": ["10.0.0.16"],
-	"seventeen.0": ["50.0.0.17"],
+	"one_0":   ["10.0.0.1"],
+	"dup_0":   ["10.0.0.1"],
+	"one_1":   ["10.0.1.1"],
+	"two_0":   ["50.0.0.1"],
+	"three_0": ["192.168.0.3"],
+	"four_0":  ["10.2.1.5"],
+	"five_0":  ["10.20.30.40"],
+	"six_0":   ["10.120.0.226"],
+	"seven_0": ["10.0.0.7"],
+	"eight_0": ["10.0.0.8"],
+	"nine_0":  ["10.0.0.9"],
+	"ten_0":   ["10.0.0.10"],
+	"eleven_0": ["10.0.0.11"],
+	"twelve_0": ["10.20.30.50"],
+	"thirteen_0": ["10.0.0.13"],
+	"fourteen_0": ["192.168.102.14"],
+	"nineteen_0": ["10.0.0.19"],
+	"sixteen_0": ["10.0.0.16"],
+	"seventeen_0": ["50.0.0.17"],
+	"eighteen_0": ["80.80.100.124"],
+	"twenty_0": ["10.0.0.20"],
 
 	"type_aws_instance":                  ["10.0.0.1", "10.0.1.1", "50.0.0.1"],
 	"type_digitalocean_droplet":          ["192.168.0.3"],
 	"type_cloudstack_instance":           ["10.2.1.5"],
 	"type_vsphere_virtual_machine":       ["10.20.30.40", "10.20.30.50"],
 	"type_openstack_compute_instance_v2": ["10.120.0.226"],
+	"type_opentelekomcloud_compute_instance_v2": ["10.0.0.19"],
 	"type_profitbricks_server":           ["10.0.0.16"],
+	"type_hcloud_server":                 ["10.0.0.20"],
 	"type_softlayer_virtual_guest":       ["10.0.0.7"],
 	"type_exoscale_compute":              ["10.0.0.9"],
 	"type_google_compute_instance":       ["10.0.0.8"],
@@ -495,7 +568,9 @@ const expectedListOutput = `
 	"type_packet_device":                 ["10.0.0.13"],
 	"type_libvirt_domain":                ["192.168.102.14"],
 	"type_aws_spot_instance_request":			["50.0.0.17"],
+	"type_linode_instance":               ["80.80.100.124"],
 
+	"role_nine": ["10.0.0.9"],
 	"role_rrrrrrrr": ["10.20.30.40"],
 	"role_web": ["10.0.0.1"],
 	"role_test": ["10.0.0.10"],
@@ -503,8 +578,10 @@ const expectedListOutput = `
 	"webserver": ["192.168.0.3"],
 	"staging": ["192.168.0.3"],
 	"status_superserver": ["10.120.0.226"],
+	"testlabel_hcloud_test": ["10.0.0.20"],
 	"database": ["10.0.0.8"],
-	"scw_test": ["10.0.0.11"]
+	"scw_test": ["10.0.0.11"],
+	"tfinventory_rocks": ["10.0.0.19"]
 }
 `
 
@@ -514,6 +591,8 @@ const expectedInventoryOutput = `[all]
 10.0.0.11
 10.0.0.13
 10.0.0.16
+10.0.0.19
+10.0.0.20
 10.0.0.7
 10.0.0.8
 10.0.0.9
@@ -525,6 +604,7 @@ const expectedInventoryOutput = `[all]
 192.168.102.14
 50.0.0.1
 50.0.0.17
+80.80.100.124
 10.20.30.50
 
 [all:vars]
@@ -539,54 +619,69 @@ olddatacenter="\u003c0.7_format"
 [dup]
 10.0.0.1
 
-[dup.0]
+[dup_0]
 10.0.0.1
 
 [eight]
 10.0.0.8
 
-[eight.0]
+[eight_0]
 10.0.0.8
+
+[eighteen]
+80.80.100.124
+
+[eighteen_0]
+80.80.100.124
 
 [eleven]
 10.0.0.11
 
-[eleven.0]
+[eleven_0]
 10.0.0.11
 
 [five]
 10.20.30.40
 
-[five.0]
+[five_0]
 10.20.30.40
 
 [four]
 10.2.1.5
 
-[four.0]
+[four_0]
 10.2.1.5
 
 [fourteen]
 192.168.102.14
 
-[fourteen.0]
+[fourteen_0]
 192.168.102.14
 
 [nine]
 10.0.0.9
 
-[nine.0]
+[nine_0]
 10.0.0.9
+
+[nineteen]
+10.0.0.19
+
+[nineteen_0]
+10.0.0.19
 
 [one]
 10.0.0.1
 10.0.1.1
 
-[one.0]
+[one_0]
 10.0.0.1
 
-[one.1]
+[one_1]
 10.0.1.1
+
+[role_nine]
+10.0.0.9
 
 [role_rrrrrrrr]
 10.20.30.40
@@ -606,25 +701,25 @@ olddatacenter="\u003c0.7_format"
 [seven]
 10.0.0.7
 
-[seven.0]
+[seven_0]
 10.0.0.7
 
 [seventeen]
 50.0.0.17
 
-[seventeen.0]
+[seventeen_0]
 50.0.0.17
 
 [six]
 10.120.0.226
 
-[six.0]
+[six_0]
 10.120.0.226
 
 [sixteen]
 10.0.0.16
 
-[sixteen.0]
+[sixteen_0]
 10.0.0.16
 
 [staging]
@@ -636,34 +731,46 @@ olddatacenter="\u003c0.7_format"
 [ten]
 10.0.0.10
 
-[ten.0]
+[ten_0]
 10.0.0.10
 
 [testTag1]
 10.20.30.50
 
+[testlabel_hcloud_test]
+10.0.0.20
+
+[tfinventory_rocks]
+10.0.0.19
+
 [thirteen]
 10.0.0.13
 
-[thirteen.0]
+[thirteen_0]
 10.0.0.13
 
 [three]
 192.168.0.3
 
-[three.0]
+[three_0]
 192.168.0.3
 
 [twelve]
 10.20.30.50
 
-[twelve.0]
+[twelve_0]
 10.20.30.50
+
+[twenty]
+10.0.0.20
+
+[twenty_0]
+10.0.0.20
 
 [two]
 50.0.0.1
 
-[two.0]
+[two_0]
 50.0.0.1
 
 [type_aws_instance]
@@ -686,11 +793,20 @@ olddatacenter="\u003c0.7_format"
 [type_google_compute_instance]
 10.0.0.8
 
+[type_hcloud_server]
+10.0.0.20
+
 [type_libvirt_domain]
 192.168.102.14
 
+[type_linode_instance]
+80.80.100.124
+
 [type_openstack_compute_instance_v2]
 10.120.0.226
+
+[type_opentelekomcloud_compute_instance_v2]
+10.0.0.19
 
 [type_packet_device]
 10.0.0.13
@@ -727,10 +843,12 @@ const expectedHostOneOutput = `
 `
 
 func TestListCommand(t *testing.T) {
-	var s state
+	var s stateAnyTerraformVersion
 	r := strings.NewReader(exampleStateFile)
 	err := s.read(r)
 	assert.NoError(t, err)
+
+	assert.Equal(t, TerraformVersionPre0dot12, s.TerraformVersion)
 
 	// Decode expectation as JSON
 	var exp interface{}
@@ -752,10 +870,12 @@ func TestListCommand(t *testing.T) {
 }
 
 func TestListCommandEnvHostname(t *testing.T) {
-	var s state
+	var s stateAnyTerraformVersion
 	r := strings.NewReader(exampleStateFileEnvHostname)
 	err := s.read(r)
 	assert.NoError(t, err)
+
+	assert.Equal(t, TerraformVersionPre0dot12, s.TerraformVersion)
 
 	// Decode expectation as JSON
 	var exp interface{}
@@ -779,10 +899,12 @@ func TestListCommandEnvHostname(t *testing.T) {
 }
 
 func TestHostCommand(t *testing.T) {
-	var s state
+	var s stateAnyTerraformVersion
 	r := strings.NewReader(exampleStateFile)
 	err := s.read(r)
 	assert.NoError(t, err)
+
+	assert.Equal(t, TerraformVersionPre0dot12, s.TerraformVersion)
 
 	// Decode expectation as JSON
 	var exp interface{}
@@ -804,10 +926,12 @@ func TestHostCommand(t *testing.T) {
 }
 
 func TestInventoryCommand(t *testing.T) {
-	var s state
+	var s stateAnyTerraformVersion
 	r := strings.NewReader(exampleStateFile)
 	err := s.read(r)
 	assert.NoError(t, err)
+
+	assert.Equal(t, TerraformVersionPre0dot12, s.TerraformVersion)
 
 	// Run the command, capture the output
 	var stdout, stderr bytes.Buffer
@@ -817,3 +941,460 @@ func TestInventoryCommand(t *testing.T) {
 
 	assert.Equal(t, expectedInventoryOutput, stdout.String())
 }
+
+//
+// Terraform 0.12 BEGIN
+//
+
+const exampleStateFileTerraform0dot12 = `
+{
+	"format_version": "0.1",
+	"terraform_version": "0.12.1",
+	"values": {
+		"outputs": {
+			"my_endpoint": {
+				"sensitive": false,
+				"value": "a.b.c.d.example.com"
+			},
+			"my_password": {
+				"sensitive": true,
+				"value": "1234"
+			},
+			"map": {
+				"sensitive": false,
+				"value": {
+					"first": "a",
+					"second": "b"
+				}
+			}
+		},
+		"root_module": {
+			"resources": [
+				{
+					"address": "aws_instance.one",
+					"type": "aws_instance",
+					"name": "one",
+					"provider_name": "aws",
+					"schema_version": 1,
+					"values": {
+						"ami": "ami-00000000000000000",
+						"id": "i-11111111111111111",
+						"private_ip": "10.0.0.1",
+						"public_ip": "35.159.25.34",
+						"tags": {
+							"Name": "one-aws-instance"
+						},
+						"volume_tags": {
+							"Ignored": "stuff"
+						}
+					}
+				},
+				{
+					"address": "vsphere_tag.bar",
+					"mode": "managed",
+					"type": "vsphere_tag",
+					"name": "bar",
+					"provider_name": "vsphere",
+					"schema_version": 0,
+					"values": {
+						"category_id": "urn:vmomi:InventoryServiceCategory:dc032379-bc2c-4fe5-bd8a-77040e3f4bc8:GLOBAL",
+						"description": "",
+						"id": "urn:vmomi:InventoryServiceTag:c70f4a73-f744-458a-b2ef-595e3c7c7c28:GLOBAL",
+						"name": "bar"
+					},
+					"depends_on": [
+						"vsphere_tag_category.foo"
+					]
+				},
+				{
+					"address": "vsphere_tag_category.foo",
+					"mode": "managed",
+					"type": "vsphere_tag_category",
+					"name": "foo",
+					"provider_name": "vsphere",
+					"schema_version": 0,
+					"values": {
+						"associable_types": [
+							"VirtualMachine"
+						],
+						"cardinality": "SINGLE",
+						"description": "",
+						"id": "urn:vmomi:InventoryServiceCategory:dc032379-bc2c-4fe5-bd8a-77040e3f4bc8:GLOBAL",
+						"name": "foo"
+					}
+				},
+				{
+					"address": "vsphere_virtual_machine.vm",
+					"mode": "managed",
+					"type": "vsphere_virtual_machine",
+					"name": "vm",
+					"provider_name": "vsphere",
+					"schema_version": 3,
+					"values": {
+						"alternate_guest_name": "",
+						"annotation": "",
+						"boot_delay": 0,
+						"boot_retry_delay": 10000,
+						"boot_retry_enabled": false,
+						"cdrom": [],
+						"change_version": "2019-08-24T17:27:59.706242Z",
+						"clone": [],
+						"cpu_hot_add_enabled": false,
+						"cpu_hot_remove_enabled": false,
+						"cpu_limit": -1,
+						"cpu_performance_counters_enabled": false,
+						"cpu_reservation": 0,
+						"cpu_share_count": 4000,
+						"cpu_share_level": "normal",
+						"custom_attributes": {},
+						"datastore_cluster_id": null,
+						"datastore_id": "datastore-1",
+						"default_ip_address": "12.34.56.78",
+						"disk": [
+							{
+								"attach": false,
+								"datastore_id": "datastore-1",
+								"device_address": "scsi:0:0",
+								"disk_mode": "persistent",
+								"disk_sharing": "sharingNone",
+								"eagerly_scrub": false,
+								"io_limit": -1,
+								"io_reservation": 0,
+								"io_share_count": 1000,
+								"io_share_level": "normal",
+								"keep_on_remove": true,
+								"key": 2000,
+								"label": "disk0",
+								"name": "",
+								"path": "foo/bar.vmdk",
+								"size": 4,
+								"thin_provisioned": true,
+								"unit_number": 0,
+								"uuid": "6000C292-6cff-cc74-87e5-37ce78a22b57",
+								"write_through": false
+							}
+						],
+						"efi_secure_boot_enabled": false,
+						"enable_disk_uuid": false,
+						"enable_logging": false,
+						"ept_rvi_mode": "automatic",
+						"extra_config": {},
+						"firmware": "bios",
+						"folder": "",
+						"force_power_off": true,
+						"guest_id": "debian8_64Guest",
+						"guest_ip_addresses": [
+							"12.34.56.78"
+						],
+						"host_system_id": "host-764",
+						"hv_mode": "hvAuto",
+						"id": "42361f05-2e60-752c-5999-6c592f0a3904",
+						"ignored_guest_ips": null,
+						"imported": false,
+						"latency_sensitivity": "normal",
+						"memory": 2048,
+						"memory_hot_add_enabled": false,
+						"memory_limit": -1,
+						"memory_reservation": 0,
+						"memory_share_count": 20480,
+						"memory_share_level": "normal",
+						"migrate_wait_timeout": 30,
+						"moid": "vm-827",
+						"name": "vm",
+						"nested_hv_enabled": false,
+						"network_interface": [
+							{
+								"adapter_type": "vmxnet3",
+								"bandwidth_limit": -1,
+								"bandwidth_reservation": 0,
+								"bandwidth_share_count": 100,
+								"bandwidth_share_level": "high",
+								"device_address": "pci:0:7",
+								"key": 4000,
+								"mac_address": "00:50:56:b3:af:02",
+								"network_id": "dvportgroup-837",
+								"use_static_mac": false
+							}
+						],
+						"num_cores_per_socket": 1,
+						"num_cpus": 4,
+						"reboot_required": false,
+						"resource_pool_id": "resgroup-768",
+						"run_tools_scripts_after_power_on": true,
+						"run_tools_scripts_after_resume": true,
+						"run_tools_scripts_before_guest_reboot": false,
+						"run_tools_scripts_before_guest_shutdown": true,
+						"run_tools_scripts_before_guest_standby": true,
+						"scsi_bus_sharing": "noSharing",
+						"scsi_controller_count": 1,
+						"scsi_type": "pvscsi",
+						"shutdown_wait_timeout": 3,
+						"swap_placement_policy": "inherit",
+						"sync_time_with_host": false,
+						"tags": [
+							"urn:vmomi:InventoryServiceTag:c70f4a73-f744-458a-b2ef-595e3c7c7c28:GLOBAL"
+						],
+						"uuid": "42361f05-2e60-752c-5999-6c592f0a3904",
+						"vapp": [],
+						"vapp_transport": [],
+						"vmware_tools_status": "guestToolsRunning",
+						"vmx_path": "foo/bar.vmx",
+						"wait_for_guest_ip_timeout": 0,
+						"wait_for_guest_net_routable": true,
+						"wait_for_guest_net_timeout": 5
+					},
+					"depends_on": [
+						"vsphere_tag.bar"
+					]
+				}
+			],
+			"child_modules": [
+				{
+					"resources": [
+						{
+							"address": "aws_instance.host",
+							"type": "aws_instance",
+							"name": "host",
+							"values": {
+								"ami": "ami-00000000000000001",
+								"id": "i-22222222222222222",
+								"private_ip": "10.0.0.2",
+								"public_ip": "",
+								"tags": {
+									"Name": "two-aws-instance"
+								}
+							}
+						}
+					],
+					"address": "module.my-module-two"
+				},
+				{
+					"resources": [
+						{
+							"address": "aws_instance.host",
+							"type": "aws_instance",
+							"name": "host",
+							"index": 0,
+							"values": {
+								"ami": "ami-00000000000000001",
+								"id": "i-33333333333333333",
+								"private_ip": "10.0.0.3",
+								"public_ip": "",
+								"tags": {
+									"Name": "three-aws-instance"
+								}
+							}
+						},
+						{
+							"address": "aws_instance.host",
+							"type": "aws_instance",
+							"name": "host",
+							"index": 1,
+							"values": {
+								"ami": "ami-00000000000000001",
+								"id": "i-11133333333333333",
+								"private_ip": "10.0.1.3",
+								"public_ip": "",
+								"tags": {
+									"Name": "three-aws-instance"
+								}
+							}
+						}
+					],
+					"address": "module.my-module-three"
+				}
+			]
+		}
+	}
+}
+`
+
+const expectedListOutputTerraform0dot12 = `
+{
+	"all": {
+		"hosts": [
+			"10.0.0.2",
+			"10.0.0.3",
+			"10.0.1.3",
+			"35.159.25.34",
+			"12.34.56.78"
+		],
+		"vars": {
+			"my_endpoint": "a.b.c.d.example.com",
+			"my_password": "1234",
+			"map": {"first": "a", "second": "b"}
+		}
+	},
+	"one_0": ["35.159.25.34"],
+	"one": ["35.159.25.34"],
+	"module_my-module-two_host_0": ["10.0.0.2"],
+	"module_my-module-two_host": ["10.0.0.2"],
+	"module_my-module-three_host_0": ["10.0.0.3"],
+	"module_my-module-three_host_1": ["10.0.1.3"],
+	"module_my-module-three_host": ["10.0.0.3", "10.0.1.3"],
+
+	"type_aws_instance": ["10.0.0.2", "10.0.0.3", "10.0.1.3", "35.159.25.34"],
+
+	"name_one-aws-instance": ["35.159.25.34"],
+	"name_two-aws-instance": ["10.0.0.2"],
+	"name_three-aws-instance": ["10.0.0.3", "10.0.1.3"],
+
+	"foo_bar": ["12.34.56.78"],
+	"type_vsphere_virtual_machine": ["12.34.56.78"],
+	"vm_0": ["12.34.56.78"],
+	"vm": ["12.34.56.78"]
+}
+`
+
+const expectedInventoryOutputTerraform0dot12 = `[all]
+10.0.0.2
+10.0.0.3
+10.0.1.3
+35.159.25.34
+12.34.56.78
+
+[all:vars]
+map={"first":"a","second":"b"}
+my_endpoint="a.b.c.d.example.com"
+my_password="1234"
+
+[foo_bar]
+12.34.56.78
+
+[module_my-module-three_host]
+10.0.0.3
+10.0.1.3
+
+[module_my-module-three_host_0]
+10.0.0.3
+
+[module_my-module-three_host_1]
+10.0.1.3
+
+[module_my-module-two_host]
+10.0.0.2
+
+[module_my-module-two_host_0]
+10.0.0.2
+
+[name_one-aws-instance]
+35.159.25.34
+
+[name_three-aws-instance]
+10.0.0.3
+10.0.1.3
+
+[name_two-aws-instance]
+10.0.0.2
+
+[one]
+35.159.25.34
+
+[one_0]
+35.159.25.34
+
+[type_aws_instance]
+10.0.0.2
+10.0.0.3
+10.0.1.3
+35.159.25.34
+
+[type_vsphere_virtual_machine]
+12.34.56.78
+
+[vm]
+12.34.56.78
+
+[vm_0]
+12.34.56.78
+
+`
+
+const expectedHostOneOutputTerraform0dot12 = `
+{
+	"ami": "ami-00000000000000000",
+	"ansible_host": "35.159.25.34",
+	"id":"i-11111111111111111",
+	"private_ip":"10.0.0.1",
+	"public_ip": "35.159.25.34",
+	"tags.#": "1",
+	"tags.Name": "one-aws-instance",
+	"volume_tags.#":"1",
+	"volume_tags.Ignored":"stuff"
+}
+`
+
+func TestListCommandTerraform0dot12(t *testing.T) {
+	var s stateAnyTerraformVersion
+	r := strings.NewReader(exampleStateFileTerraform0dot12)
+	err := s.read(r)
+	assert.NoError(t, err)
+
+	assert.Equal(t, TerraformVersion0dot12, s.TerraformVersion)
+
+	// Decode expectation as JSON
+	var exp interface{}
+	err = json.Unmarshal([]byte(expectedListOutputTerraform0dot12), &exp)
+	assert.NoError(t, err)
+
+	// Run the command, capture the output
+	var stdout, stderr bytes.Buffer
+	exitCode := cmdList(&stdout, &stderr, &s)
+	assert.Equal(t, 0, exitCode)
+	assert.Equal(t, "", stderr.String())
+
+	// Decode the output to compare
+	var act interface{}
+	err = json.Unmarshal([]byte(stdout.String()), &act)
+	assert.NoError(t, err)
+
+	assert.Equal(t, exp, act)
+}
+
+func TestHostCommandTerraform0dot12(t *testing.T) {
+	var s stateAnyTerraformVersion
+	r := strings.NewReader(exampleStateFileTerraform0dot12)
+	err := s.read(r)
+	assert.NoError(t, err)
+
+	assert.Equal(t, TerraformVersion0dot12, s.TerraformVersion)
+
+	// Decode expectation as JSON
+	var exp interface{}
+	err = json.Unmarshal([]byte(expectedHostOneOutputTerraform0dot12), &exp)
+	assert.NoError(t, err)
+
+	// Run the command, capture the output
+	var stdout, stderr bytes.Buffer
+	exitCode := cmdHost(&stdout, &stderr, &s, "35.159.25.34")
+	assert.Equal(t, 0, exitCode)
+	assert.Equal(t, "", stderr.String())
+
+	// Decode the output to compare
+	var act interface{}
+	err = json.Unmarshal([]byte(stdout.String()), &act)
+	assert.NoError(t, err)
+
+	assert.Equal(t, exp, act)
+}
+
+func TestInventoryCommandTerraform0dot12(t *testing.T) {
+	var s stateAnyTerraformVersion
+	r := strings.NewReader(exampleStateFileTerraform0dot12)
+	err := s.read(r)
+	assert.NoError(t, err)
+
+	assert.Equal(t, TerraformVersion0dot12, s.TerraformVersion)
+
+	// Run the command, capture the output
+	var stdout, stderr bytes.Buffer
+	exitCode := cmdInventory(&stdout, &stderr, &s)
+	assert.Equal(t, 0, exitCode)
+	assert.Equal(t, "", stderr.String())
+
+	assert.Equal(t, expectedInventoryOutputTerraform0dot12, stdout.String())
+}
+
+//
+// Terraform 0.12 END
+//
